@@ -1,0 +1,25 @@
+from scipy.optimize import minimize_scalar
+import numpy as np
+
+distance_to_shore = float(input('enter distance to shore (miles): '))
+distance_along_shore_to_house = float(input('enter distance along shore to house (miles): '))
+
+def optimal_landing_point():
+    rowing_speed = float(input("Enter the rowing speed (mph): "))
+    walking_speed = float(input("Enter the walking speed (mph): "))
+
+    # Function to calculate total time based on landing point x
+    def total_time(x):
+        rowing_distance = np.sqrt(distance_to_shore**2 + x**2)
+        walking_distance = distance_along_shore_to_house - x
+        time_rowing = rowing_distance / rowing_speed
+        time_walking = walking_distance / walking_speed
+        return time_rowing + time_walking
+
+    # Find the minimum of the total_time function
+    res = minimize_scalar(total_time, bounds=(0, distance_along_shore_to_house), method='bounded')
+    return res.x
+
+# Usage
+result = distance_along_shore_to_house - optimal_landing_point()
+print(f"The optimal landing point is approximately {result:.2f} miles from the house.")
